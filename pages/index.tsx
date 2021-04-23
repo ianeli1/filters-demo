@@ -39,6 +39,7 @@ const people = [
 const Home = () => {
   const [val, setVal] = useState(0);
   const [person, setPerson] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Layout>
@@ -64,7 +65,13 @@ const Home = () => {
         </Box>
         <Box styles="h-full">
           <Image
+            image="https://cdn.discordapp.com/attachments/795461900367429643/835001293591805972/loading.gif"
+            hidden={!isLoading}
+          />
+          <Image
+            onLoading={(done) => console.log(done, setIsLoading(!done))}
             image={`/api?url=${people[person].image}&filter=${filters[val]}`}
+            hidden={isLoading}
           />
         </Box>
       </div>
