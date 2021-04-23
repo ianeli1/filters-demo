@@ -64,7 +64,7 @@ const Home = () => {
         </Box>
         <Box styles="h-full">
           <Image
-            image={`http://localhost:3000/api?url=${people[person].image}&filter=${filters[val]}`}
+            image={`/api?url=${people[person].image}&filter=${filters[val]}`}
           />
         </Box>
       </div>
