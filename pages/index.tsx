@@ -6,7 +6,7 @@ import Image from "../components/Image";
 import Layout from "../components/layout";
 import Select from "../components/Select";
 
-const filters = ["Clown"];
+const filters = ["Clown", "Bonk"];
 
 const people = [
   {

@@ -22,7 +22,7 @@ export default function Image(props: ImageProps) {
       <img
         src={props.image}
         className={`${props.size ?? "w-full h-auto"} object-cover box-border ${
-          props.hidden ? "hidden" : ""
+          !!props.hidden ? "hidden" : ""
         }`}
         onLoad={setLoadingTrue}
       />

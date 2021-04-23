@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { FaceAPI } from "face-filters-azure-ai";
 import Jimp from "jimp";
+import { Maybe } from "../../utils";
 
 export interface APIResponse {
   error?: {
@@ -45,22 +46,32 @@ export default async function handler(
     } as APIResponse);
     return;
   }
-
-  switch (filter.toLowerCase()) {
-    case "clown":
-      const image = await clownHair(face, url);
-      if (image) {
-        await sendJimp(res, image);
+  let image = await Maybe(
+    (function () {
+      switch (filter.toLowerCase()) {
+        case "clown":
+          return clownHair;
+        case "bonk":
+          return bonk;
+        default:
+          return;
       }
-      return;
-    default:
-      res.send({
-        error: {
-          code: "FILTER_UNKNOWN",
-          message: "Filter name not valid",
-        },
-      });
+    })(),
+    face,
+    url
+  );
+
+  if (image) {
+    await sendJimp(res, image);
+    return;
   }
+
+  res.send({
+    error: {
+      code: "FILTER_UNKNOWN",
+      message: "Filter name not valid",
+    },
+  });
 }
 
 async function sendJimp(response: NextApiResponse, image: Jimp) {
@@ -85,6 +96,22 @@ async function clownHair(face: FaceAPI, url: string) {
     return await face.faceFilter(url, clownH, scale, (coord, { w }) => ({
       x: coord.x + coord.w / 2 - w / 2,
       y: coord.y - coord.h / 1.5,
+    }));
+  } catch (e) {
+    console.trace(e);
+    return undefined;
+  }
+}
+
+async function bonk(face: FaceAPI, url: string) {
+  try {
+    const scale = 0.7;
+    const hammer =
+      "https://cdn.discordapp.com/attachments/795461900367429643/812544803430596608/1f528.png";
+
+    return await face.faceFilter(url, hammer, scale, (coord, { h }) => ({
+      x: coord.x + coord.w / 2,
+      y: coord.y + coord.h / 25 - h / 5,
     }));
   } catch (e) {
     console.trace(e);
