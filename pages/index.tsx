@@ -54,8 +54,6 @@ const Home = () => {
                 onChange={(_, id) => setVal(id)}
               />
             </div>
-
-            <Button>Process</Button>
           </Box>
           <Gallery
             images={people.map((x) => x.image)}
